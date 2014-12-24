@@ -2,8 +2,8 @@ require_relative 'sanitizer'
 
 module Hanitizer
   class Formula
-    def sanitize(name)
-      @sanitizers << Sanitizer.new(name)
+    def sanitize(name, &block)
+      @sanitizers << Sanitizer.new(name, &block)
     end
 
     def sanitizers
