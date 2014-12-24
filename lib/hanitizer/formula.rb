@@ -1,6 +1,21 @@
-class Formula
-  attr_accessor :specs
+require_relative 'sanitizer'
 
-  def clean
+module Hanitizer
+  class Formula
+    def sanitize(name)
+      @sanitizers << Sanitizer.new(name)
+    end
+
+    def sanitizers
+      @sanitizers ||= []
+    end
+
+    def truncate(name)
+      truncations << name unless truncations.include?(name)
+    end
+
+    def truncations
+      @truncations ||= []
+    end
   end
 end
