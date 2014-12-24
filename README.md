@@ -29,11 +29,11 @@ Or install it yourself as:
     
 ### Connect to a database
 
-    db = Hanitizer.connect 'postgres://user:password@host/database_name/'
+    repository = Hanitizer.connect 'postgres://user:password@host/database_name/'
 
 ### Run your formula(s)
 
-    db.sanitize :transactions, :members, :users
+    repository.sanitize_with :transactions, :members, :users
 
 ## Formula Examples
 
