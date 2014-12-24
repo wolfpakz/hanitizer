@@ -3,7 +3,9 @@ require 'hanitizer/formula'
 
 module Hanitizer
   RSpec.describe Formula do
-    subject(:formula) { Formula.new }
+    subject(:formula) { Formula.new name }
+
+    let(:name) { :elastic_girl }
 
     # it do
     #   # Define some formulae
@@ -18,12 +20,24 @@ module Hanitizer
     #   cleaner.clean repository
     # end
 
+    it 'has a name' do
+      expect(formula).to respond_to :name
+    end
+
     it 'has truncations' do
       expect(formula).to respond_to :truncations
     end
 
     it 'has sanitizers' do
       expect(formula).to respond_to :sanitizers
+    end
+
+    describe '.new' do
+      let(:name) { :mr_incredible }
+
+      it 'sets the name' do
+        expect(formula.name).to eq name
+      end
     end
 
     describe '#sanitize' do

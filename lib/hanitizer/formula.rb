@@ -2,6 +2,12 @@ require_relative 'sanitizer'
 
 module Hanitizer
   class Formula
+    attr_accessor :name
+
+    def initialize(name)
+      @name = name
+    end
+
     def sanitize(name, &block)
       @sanitizers << Sanitizer.new(name, &block)
     end
