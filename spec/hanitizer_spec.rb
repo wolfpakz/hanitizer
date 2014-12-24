@@ -6,6 +6,18 @@ RSpec.describe Hanitizer do
     expect(defined? Hanitizer).to be_truthy
   end
 
+  describe '.connect' do
+  # def connect(url)
+  #   uri = URI.parse(url)
+  #   scheme = uri.scheme
+  #
+  #   klass = Kernel.constants "Hanitizer::Adapter::#{scheme.ucfirst}"
+  #   adapter = klass.new
+  #   adapter.connect uri
+  #   adapter
+  # end
+  end
+
   describe '.formula' do
     let!(:formula) { Hanitizer::Formula.new(formula_name) }
     let(:formula_name) { :foo }

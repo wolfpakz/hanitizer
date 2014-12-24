@@ -40,8 +40,7 @@ module Hanitizer
       #   end
       #
       #   formula.sanitizers.each do |sanitizer|
-      #     collection = repository.collections sanitizer.collection_name
-      #     collection.update_each do |row|
+      #     repository.update_each(sanitizer.collection_name) do |row|
       #       sanitizer.sanitize row
       #     end
       #   end
