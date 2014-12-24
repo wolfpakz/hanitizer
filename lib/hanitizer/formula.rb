@@ -6,6 +6,7 @@ module Hanitizer
 
     def initialize(name)
       @name = name
+      @sanitizers = []
     end
 
     def sanitize(name, &block)
@@ -13,7 +14,7 @@ module Hanitizer
     end
 
     def sanitizers
-      @sanitizers ||= []
+      @sanitizers
     end
 
     def truncate(name)
