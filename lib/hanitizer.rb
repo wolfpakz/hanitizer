@@ -1,4 +1,5 @@
-require "hanitizer/version"
+require 'hanitizer/version'
+require 'hanitizer/formula'
 
 module Hanitizer
   @@formulae = {} unless defined? @@formulae
