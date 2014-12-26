@@ -1,5 +1,8 @@
 require 'hanitizer/version'
+require 'hanitizer/adapter'
+require 'hanitizer/adapter/mysql'
 require 'hanitizer/formula'
+require 'uri'
 
 module Hanitizer
   @@formulae = {} unless defined? @@formulae

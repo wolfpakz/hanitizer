@@ -1,6 +1,4 @@
 require 'hanitizer'
-require 'hanitizer/adapter'
-require 'hanitizer/formula'
 require 'support/test_adapter'
 
 RSpec.describe Hanitizer do
