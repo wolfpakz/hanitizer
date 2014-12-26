@@ -1,21 +1,74 @@
 require 'hanitizer'
+require 'hanitizer/adapter'
 require 'hanitizer/formula'
+require 'support/test_adapter'
 
 RSpec.describe Hanitizer do
   it 'exists' do
     expect(defined? Hanitizer).to be_truthy
   end
 
+  describe '.adapter_class' do
+    let(:arg) { 'test' }
+
+    def result
+      Hanitizer.adapter_class arg
+    end
+
+    it 'returns the class constant Hanitizer::Adapter::<capitalized string>' do
+      expect(result).to equal ::Hanitizer::Adapter::Test
+    end
+
+    context 'with a symbol' do
+      let(:arg) { :test }
+
+      it 'converts the symbol to a string' do
+        expect(result).to equal ::Hanitizer::Adapter::Test
+      end
+    end
+
+    context 'with upper cased letters' do
+      let(:arg) { 'TEST' }
+
+      it 'downcases the name' do
+        expect(result).to equal ::Hanitizer::Adapter::Test
+      end
+    end
+  end
+
   describe '.connect' do
-  # def connect(url)
-  #   uri = URI.parse(url)
-  #   scheme = uri.scheme
-  #
-  #   klass = Kernel.constants "Hanitizer::Adapter::#{scheme.ucfirst}"
-  #   adapter = klass.new
-  #   adapter.connect uri
-  #   adapter
-  # end
+    let(:scheme) { 'test' }
+    let(:url) { "#{scheme}://host/" }
+    let!(:parsed_url) { URI.parse url }
+    let!(:test_adapter) { Hanitizer::Adapter::Test.new }
+
+    it 'takes a database url' do
+      expect {
+        Hanitizer.connect
+      }.to raise_error(ArgumentError)
+    end
+
+    it 'parses a database url' do
+      expect(::URI).to receive(:parse).with(url).and_return(parsed_url)
+      Hanitizer.connect url
+    end
+
+    it 'finds the database adapter class' do
+      expect(Hanitizer).to receive(:adapter_class).with(scheme).and_return(Hanitizer::Adapter::Test)
+      Hanitizer.connect url
+    end
+
+    it 'makes a new database adapter' do
+      expect(Hanitizer::Adapter::Test).to receive(:new).and_return(test_adapter)
+      Hanitizer.connect url
+    end
+
+    it 'connects to the database' do
+      allow(Hanitizer::Adapter::Test).to receive_messages(:new => test_adapter)
+
+      expect(test_adapter).to receive(:connect)
+      Hanitizer.connect url
+    end
   end
 
   describe '.formula' do

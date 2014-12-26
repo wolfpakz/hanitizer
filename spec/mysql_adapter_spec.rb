@@ -14,7 +14,7 @@ module Hanitizer
     let(:database) { 'test' }
     let(:username) { 'user' }
     let(:password) { 'secret' }
-    let(:uri)      { 'mysql2://localhost/test' }
+    let(:url)      { 'mysql2://localhost/test' }
 
     let(:client_double) {
       client = double('Mysql2::Client')
@@ -48,16 +48,16 @@ module Hanitizer
 
     describe '#connect' do
       it 'connects to the repository' do
-        adapter.connect uri
+        adapter.connect url
         expect(::Mysql2::Client).to have_received(:new)
       end
 
-      context 'with an invalid URI' do
-        let(:uri) { 'crap;://localhost/' }
+      context 'with an invalid URL' do
+        let(:url) { 'crap;://localhost/' }
 
         it 'raises an error' do
           expect {
-            adapter.connect uri
+            adapter.connect url
           }.to raise_error(URI::InvalidURIError)
         end
       end
@@ -66,7 +66,7 @@ module Hanitizer
     describe '#collection_entries' do
       before do
         allow(client_double).to receive_messages(:query => result_double)
-        adapter.connect uri
+        adapter.connect url
       end
 
       it 'reads all entries from the collection' do

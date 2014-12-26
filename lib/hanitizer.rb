@@ -4,6 +4,22 @@ require 'hanitizer/formula'
 module Hanitizer
   @@formulae = {} unless defined? @@formulae
 
+  def self.adapter_class(name)
+    string = name.to_s
+    downcased = string.downcase
+    capped = downcased.capitalize
+    Adapter.const_get capped
+  end
+
+  def self.connect(url)
+    uri = URI.parse(url)
+    klass = adapter_class uri.scheme
+
+    adapter = klass.new
+    adapter.connect url
+    adapter
+  end
+
   def self.formula(name, &block)
     raise ArgumentError, 'Block required to define a Formula, but none given.' unless block_given?
     @@formulae[name] = Formula.new(name)

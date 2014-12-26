@@ -1,10 +1,8 @@
 require 'rspec'
 require 'hanitizer/adapter'
+require 'support/test_adapter'
 
 module Hanitizer
-
-  class Adapter::Test < Adapter
-  end
 
   RSpec.describe Adapter::Test do
     subject(:adapter) { Adapter::Test.new }
