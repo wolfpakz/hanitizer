@@ -14,7 +14,7 @@ module Hanitizer
     let(:database) { 'test' }
     let(:username) { 'user' }
     let(:password) { 'secret' }
-    let(:url)      { 'mysql2://localhost/test' }
+    let(:url)      { "mysql2://#{username}:#{password}@#{host}/test" }
 
     let(:client_double) {
       client = double('Mysql2::Client')
@@ -50,6 +50,26 @@ module Hanitizer
       it 'connects to the repository' do
         adapter.connect url
         expect(::Mysql2::Client).to have_received(:new)
+      end
+
+      it 'connects to the correct host' do
+        expect(::Mysql2::Client).to receive(:new).with(hash_including :host => host)
+        adapter.connect url
+      end
+
+      it 'connects using a username' do
+        expect(::Mysql2::Client).to receive(:new).with(hash_including :username => username)
+        adapter.connect url
+      end
+
+      it 'connects using a password' do
+        expect(::Mysql2::Client).to receive(:new).with(hash_including :password => password)
+        adapter.connect url
+      end
+
+      it 'connects to the correct database' do
+        expect(::Mysql2::Client).to receive(:new).with(hash_including :database => database)
+        adapter.connect url
       end
 
       context 'with an invalid URL' do

@@ -7,9 +7,10 @@ module Hanitizer
 
     def connect(connection_string)
       uri = URI.parse(connection_string)
-      host, user, password = uri.host, uri.user, uri.password
+      host, user, password, path = uri.host, uri.user, uri.password, uri.path
+      database = path.gsub('/', '')
 
-      @client = ::Mysql2::Client.new :host => host, :username => user, :password => password
+      @client = ::Mysql2::Client.new :host => host, :username => user, :password => password, :database => database
     end
 
     def collection_entries(collection_name)
