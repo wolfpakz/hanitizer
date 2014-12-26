@@ -25,7 +25,25 @@ module Hanitizer
       end
     end
 
+    def update(collection, id, attributes)
+      attributes.delete(:id) if attributes.key?(:id)
+
+      unless attributes.empty?
+        mapped_attributes = attributes.map do |pair|
+          key,value = pair
+          "%s = '%s'" % [key, client.escape(value)]
+        end
+
+        sql = 'UPDATE %s SET %s WHERE id = %d' % [client.escape(collection), mapped_attributes.join(', '), id]
+        client.query(sql)
+      end
+    end
+
     def update_each(collection_name, &block)
+      collection_entries(collection_name).each do |original_hash|
+        updated_hash = yield original_hash
+        update(collection_name, original_hash[:id], updated_hash) unless updated_hash.eql?(original_hash)
+      end
     end
   end
 end
