@@ -27,7 +27,7 @@ module Hanitizer
     end
 
     def update(collection, id, attributes)
-      attributes.delete(:id) if attributes.key?(:id)
+      attributes.delete('id') if attributes.key?('id')
 
       unless attributes.empty?
         mapped_attributes = attributes.map do |pair|
@@ -43,7 +43,7 @@ module Hanitizer
     def update_each(collection_name, &block)
       collection_entries(collection_name).each do |original_hash|
         updated_hash = yield original_hash
-        update(collection_name, original_hash[:id], updated_hash) unless updated_hash.eql?(original_hash)
+        update(collection_name, original_hash['id'], updated_hash) unless updated_hash.eql?(original_hash)
       end
     end
   end
