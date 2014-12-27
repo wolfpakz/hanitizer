@@ -44,7 +44,11 @@ module Hanitizer
       allow(adapter).to receive_messages(:client => client_double)
     end
 
-    it_behaves_like 'an adapter'
+    it_behaves_like 'an adapter' do
+      let!(:adapter) { Adapter::MysqlTest.new }
+      let(:collection_name) { database }
+      let(:entries) { stubbed_entries }
+    end
 
     describe '#connect' do
       it 'connects to the repository' do
@@ -113,62 +117,6 @@ module Hanitizer
 
           expect(client_double).to have_received(:query).with('TRUNCATE first')
           expect(client_double).to have_received(:query).with('TRUNCATE second')
-        end
-      end
-    end
-
-    describe '#update_each' do
-      before do
-        allow(adapter).to receive_messages(:collection_entries => stubbed_entries)
-      end
-
-      it 'reads collection entries' do
-        expect(adapter).to receive(:collection_entries).with(collection_name)
-        adapter.update_each(collection_name) {|row| {} }
-      end
-
-      it 'runs the block on every entry' do
-        block_call_count = 0
-
-        adapter.update_each(collection_name) { |row|
-          block_call_count += 1
-          {}
-        }
-
-        expect(block_call_count).to eq stubbed_entries.size
-      end
-
-      context 'when the block returns a new hash' do
-        it 'updates the repository' do
-          expect(adapter).to receive(:update).exactly(stubbed_entries.size).times
-
-          index = 0
-          adapter.update_each(collection_name) { |row|
-            index += 1
-            { :first_name => 'Under', :last_name => "Miner #{index}", :quote => 'All will tremble before me!' }
-          }
-        end
-      end
-
-      context 'when the block modifies the original hash' do
-        it 'updates the repository' do
-          expect(adapter).to receive(:update).exactly(stubbed_entries.size).times
-
-          index = 0
-          adapter.update_each(collection_name) { |row|
-            index += 1
-            row['first_name'] = '%s %d' % [row['first_name'], index]
-            row['last_name']  = '%s %d' % [row['last_name'], index]
-            row
-          }
-        end
-      end
-
-      context 'with no block' do
-        it 'raises a LocalJumpError' do
-          expect {
-            adapter.update_each(collection_name)
-          }.to raise_error(LocalJumpError)
         end
       end
     end
