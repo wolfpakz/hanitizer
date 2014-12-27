@@ -82,8 +82,8 @@ RSpec.describe Hanitizer do
       expect(Hanitizer::Formula).to have_received(:new).with(formula_name)
     end
 
-    it 'adds the Formula to the list of formulae' do
-      expect(Hanitizer.formulae[formula_name]).to equal formula
+    it 'adds the Formula to the list of formulas' do
+      expect(Hanitizer.formulas[formula_name]).to equal formula
     end
 
     context 'without a block' do
@@ -112,13 +112,13 @@ RSpec.describe Hanitizer do
     end
   end
 
-  describe '.formulae' do
+  describe '.formulas' do
     it 'is enumerable' do
-      expect(Hanitizer.formulae).to respond_to :each
+      expect(Hanitizer.formulas).to respond_to :each
     end
 
     it 'has keys' do
-      expect(Hanitizer.formulae).to respond_to :keys
+      expect(Hanitizer.formulas).to respond_to :keys
     end
   end
 end

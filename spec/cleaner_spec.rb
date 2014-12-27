@@ -3,28 +3,29 @@ require 'hanitizer/cleaner'
 module Hanitizer
   RSpec.describe Cleaner do
 
-    it 'has formulae'
+    it 'has formulas'
+
 
     describe '.new' do
       context 'with one formula name' do
-        it 'adds to the list of formulae'
+        it 'adds to the list of formulas'
       end
 
       context 'with multiple names' do
-        it 'adds all names to the list of formulae'
+        it 'adds all names to the list of formulas'
       end
     end
 
 
     describe '#clean' do
       # def clean
-      #   formulae.each do |formula|
+      #   formulas.each do |formula|
       #     apply formula
       #   end
       # end
 
       # cleaner.clean self
-      it 'applies all formulae'
+      it 'applies all formulas'
 
       context 'without a repository' do
         # cleaner.clean

@@ -5,7 +5,7 @@ require 'hanitizer/formula'
 require 'uri'
 
 module Hanitizer
-  @@formulae = {} unless defined? @@formulae
+  @@formulas = {} unless defined? @@formulas
 
   def self.adapter_class(name)
     string = name.to_s
@@ -25,12 +25,12 @@ module Hanitizer
 
   def self.formula(name, &block)
     raise ArgumentError, 'Block required to define a Formula, but none given.' unless block_given?
-    @@formulae[name] = Formula.new(name)
-    @@formulae[name].instance_eval(&block)
-    @@formulae[name]
+    @@formulas[name] = Formula.new(name)
+    @@formulas[name].instance_eval(&block)
+    @@formulas[name]
   end
 
-  def self.formulae
-    @@formulae
+  def self.formulas
+    @@formulas
   end
 end

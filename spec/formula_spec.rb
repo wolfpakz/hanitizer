@@ -8,7 +8,7 @@ module Hanitizer
     let(:name) { :elastic_girl }
 
     # it do
-    #   # Define some formulae
+    #   # Define some formulas
     #   formula_a = Formula.new :some_name
     #   formula_a.truncate :batches, :entries, :headers, :files, :transactions
     #
