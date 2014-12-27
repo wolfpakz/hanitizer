@@ -41,9 +41,9 @@ module Hanitizer
     end
 
     def update_each(collection_name, &block)
-      collection_entries(collection_name).each do |original_hash|
-        updated_hash = yield original_hash
-        update(collection_name, original_hash['id'], updated_hash) unless updated_hash.eql?(original_hash)
+      collection_entries(collection_name).each do |entry|
+        updated_entry = yield Hash.new.merge(entry)
+        update(collection_name, entry['id'], updated_entry) unless updated_entry.eql?(entry)
       end
     end
   end

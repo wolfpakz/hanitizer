@@ -138,15 +138,30 @@ module Hanitizer
         expect(block_call_count).to eq stubbed_entries.size
       end
 
-      it 'updates the entry using the block\'s return value' do
+      context 'when the block returns a new hash' do
+        it 'updates the repository' do
+          expect(adapter).to receive(:update).exactly(stubbed_entries.size).times
 
-        expect(adapter).to receive(:update).exactly(stubbed_entries.size).times
+          index = 0
+          adapter.update_each(collection_name) { |row|
+            index += 1
+            { :first_name => 'Under', :last_name => "Miner #{index}", :quote => 'All will tremble before me!' }
+          }
+        end
+      end
 
-        index = 0
-        adapter.update_each(collection_name) { |row|
-          index += 1
-          { :first_name => 'Under', :last_name => "Miner #{index}", :quote => 'All will tremble before me!' }
-        }
+      context 'when the block modifies the original hash' do
+        it 'updates the repository' do
+          expect(adapter).to receive(:update).exactly(stubbed_entries.size).times
+
+          index = 0
+          adapter.update_each(collection_name) { |row|
+            index += 1
+            row['first_name'] = '%s %d' % [row['first_name'], index]
+            row['last_name']  = '%s %d' % [row['last_name'], index]
+            row
+          }
+        end
       end
 
       context 'with no block' do
