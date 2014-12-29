@@ -72,7 +72,6 @@ module Hanitizer
 
       it 'applies all sanitizers' do
         formula.sanitizers.each do |sanitizer|
-          # expect(adapter).to receive(:update_each).with(collection_name)
           expect(sanitizer).to receive(:sanitize).exactly(stubbed_entries.length).times
         end
 
