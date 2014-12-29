@@ -11,6 +11,7 @@ module Hanitizer
     string = name.to_s
     downcased = string.downcase
     capped = downcased.capitalize
+
     Adapter.const_get capped
   end
 

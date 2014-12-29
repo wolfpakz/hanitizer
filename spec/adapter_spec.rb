@@ -8,9 +8,9 @@ module Hanitizer
     subject(:adapter) { Adapter::Test.new }
 
     let(:formulas) {
-      list = []
-      list << Formula.new(:first)
-      list << Formula.new(:second)
+      list = {}
+      list[:first]  =  Formula.new(:first)
+      list[:second] =  Formula.new(:second)
       list
     }
 

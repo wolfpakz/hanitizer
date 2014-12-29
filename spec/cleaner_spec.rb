@@ -1,54 +1,83 @@
 require 'hanitizer/cleaner'
+require 'support/test_adapter'
 
 module Hanitizer
   RSpec.describe Cleaner do
-
-    it 'has formulas'
+    subject(:cleaner) { Cleaner.new(*formula_list) }
+    let(:adapter) { Adapter::Test.new }
+    let(:formula_list) { [] }
 
 
     describe '.new' do
+      let(:formula_list) { [:first] }
+
       context 'with one formula name' do
-        it 'adds to the list of formulas'
+        it 'adds to the list of formulas' do
+          expect(cleaner.formulas.length).to eq 1
+        end
       end
 
-      context 'with multiple names' do
-        it 'adds all names to the list of formulas'
+      context 'with multiple formula names' do
+        let(:formula_list) { [:first, :second, :third] }
+
+        it 'adds all names to the list of formulas' do
+          expect(cleaner.formulas.length).to eq formula_list.length
+        end
       end
     end
 
 
     describe '#clean' do
-      # def clean
-      #   formulas.each do |formula|
-      #     apply formula
-      #   end
-      # end
+      let(:formula_list) { [:one, :two, :three] }
 
-      # cleaner.clean self
-      it 'applies all formulas'
-
-      context 'without a repository' do
-        # cleaner.clean
-        it 'raises an ArgumentError'
+      it 'applies all formulas' do
+        expect(cleaner).to receive(:apply).exactly(formula_list.length).times
+        cleaner.clean adapter
       end
     end
 
 
     describe '#apply' do
-      # def apply(formula)
-      #   formula.truncations.each do |name|
-      #     repository.truncate name
-      #   end
-      #
-      #   formula.sanitizers.each do |sanitizer|
-      #     repository.update_each(sanitizer.collection_name) do |row|
-      #       sanitizer.sanitize row
-      #     end
-      #   end
-      # end
+      let(:collection_name) { :foo }
+      let!(:formula) {
+        Formula.new(:test).tap do |f|
+          f.truncate :a
+          f.truncate :b
+          f.truncate :c
 
-      it 'applies all truncations'
-      it 'applies all sanitizers'
+          f.sanitize collection_name do |row|
+            true
+          end
+        end
+      }
+
+      let(:stubbed_entries) {
+        [
+          {:id => 4, :first_name => 'Amazing', :last_name => 'Flash'},
+          {:id => 5, :first_name => 'Gazer', :last_name => 'Beam'}
+        ]
+      }
+
+      before do
+        allow(adapter).to receive(:collection_entries).and_return(stubbed_entries)
+      end
+
+      it 'applies all truncations' do
+        formula.truncations.each do |name|
+          expect(adapter).to receive(:truncate).with(name)
+        end
+
+        cleaner.apply(formula, adapter)
+      end
+
+      it 'applies all sanitizers' do
+        formula.sanitizers.each do |sanitizer|
+          # expect(adapter).to receive(:update_each).with(collection_name)
+          expect(sanitizer).to receive(:sanitize).exactly(stubbed_entries.length).times
+        end
+
+        cleaner.apply(formula, adapter)
+      end
     end
   end
 end

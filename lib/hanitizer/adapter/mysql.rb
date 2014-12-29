@@ -39,7 +39,5 @@ module Hanitizer
         client.query(sql)
       end
     end
-
-
   end
 end
