@@ -41,8 +41,6 @@ module Hanitizer
     end
 
     describe '#sanitize' do
-      it 'creates a new Sanitizer'
-
       it 'adds a Sanitizer' do
         expect {
           formula.sanitize :rambo do
