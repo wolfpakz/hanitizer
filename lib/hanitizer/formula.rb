@@ -14,7 +14,7 @@ module Hanitizer
     def sanitize(name, &block)
       name = name.to_s
       @sanitizers[name] ||= []
-      @sanitizers[name] << Sanitizer.new(name, &block)
+      @sanitizers[name] << Sanitizer.new(&block)
     end
 
     def truncate(name)

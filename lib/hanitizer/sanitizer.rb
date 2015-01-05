@@ -1,11 +1,10 @@
 module Hanitizer
   class Sanitizer
-    attr_accessor :collection, :definition
+    attr_accessor :definition
 
-    def initialize(collection, &block)
+    def initialize(&block)
       raise ArgumentError, 'Block required to define a Sanitizer' unless block_given?
 
-      @collection = collection
       @definition = block
     end
 

@@ -2,34 +2,25 @@ require 'hanitizer/sanitizer'
 
 module Hanitizer
   RSpec.describe Sanitizer do
-    subject(:sanitizer) { Sanitizer.new(collection, &definition) }
+    subject(:sanitizer) { Sanitizer.new(&definition) }
 
-    let(:collection) { :rambo }
     let(:definition) {
       lambda {
         'HUNT'
       }
     }
 
-    it 'has a collection' do
-      expect(sanitizer).to respond_to :collection
-    end
 
     it 'has a definition' do
       expect(sanitizer).to respond_to :definition
     end
 
     describe '.new' do
-      let(:collection) { :incredible_hulk }
       let(:definition) {
         lambda {
           'SMASH'
         }
       }
-
-      it 'sets the collection' do
-        expect(sanitizer.collection).to eq collection
-      end
 
       it 'sets the definition' do
         expect(sanitizer.definition).to equal definition
