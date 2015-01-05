@@ -41,18 +41,37 @@ module Hanitizer
     end
 
     describe '#sanitize' do
-      it 'adds a Sanitizer' do
-        expect {
-          formula.sanitize :rambo do
+      let(:collection) { :hunters }
+      let(:example_block) {
+        lambda {
+          formula.sanitize collection do
             email :email
           end
-        }.to change { formula.sanitizers.size }.by(1)
+        }
+      }
+
+      it 'adds the named collection to #sanitizers' do
+        expect(example_block).to change { formula.sanitizers.keys.include?(collection.to_s) }.from(false).to(true)
+      end
+
+      it 'adds to the #sanitizers hash' do
+        expect(example_block).to change { formula.sanitizers.values.size }.by(1)
+      end
+
+      context 'with a repeated collection name' do
+        before do
+          example_block.call
+        end
+
+        it 'does not add to #collections' do
+          expect(example_block).not_to change { formula.sanitizers.keys.size }
+        end
       end
     end
 
     describe '#santizers' do
-      it 'is enumerable' do
-        expect(formula.sanitizers).to respond_to :each
+      it 'has keys' do
+        expect(formula.sanitizers).to respond_to :keys
       end
     end
 
@@ -64,7 +83,7 @@ module Hanitizer
       end
 
       it 'adds a truncation' do
-        expect(formula.truncations).to include(:foobar)
+        expect(formula.truncations).to include(name.to_s)
       end
 
       context 'with a duplicate name' do

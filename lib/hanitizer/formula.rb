@@ -3,26 +3,23 @@ require_relative 'sanitizer'
 module Hanitizer
   class Formula
     attr_accessor :name
+    attr_reader :sanitizers, :truncations
 
     def initialize(name)
       @name = name
-      @sanitizers = []
+      @sanitizers  = {}
+      @truncations = []
     end
 
     def sanitize(name, &block)
-      @sanitizers << Sanitizer.new(name, &block)
-    end
-
-    def sanitizers
-      @sanitizers
+      name = name.to_s
+      @sanitizers[name] ||= []
+      @sanitizers[name] << Sanitizer.new(name, &block)
     end
 
     def truncate(name)
+      name = name.to_s
       truncations << name unless truncations.include?(name)
-    end
-
-    def truncations
-      @truncations ||= []
     end
   end
 end
