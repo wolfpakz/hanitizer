@@ -5,6 +5,8 @@ require 'hanitizer/formula'
 require 'uri'
 
 module Hanitizer
+  class MissingGeneratorError < NameError; end
+
   @@formulas = {} unless defined? @@formulas
 
   def self.adapter_class(name)

@@ -1,3 +1,5 @@
+require_relative 'generator'
+
 module Hanitizer
   class Sanitizer
     attr_accessor :definition
@@ -9,6 +11,8 @@ module Hanitizer
     end
 
     def sanitize(row)
+      context = Generator::Context.new row
+      context.execute(&definition)
     end
   end
 end

@@ -10,6 +10,11 @@ module Hanitizer
       }
     }
 
+    let(:row) {
+      {
+        :first_name => 'Dynaguy'
+      }
+    }
 
     it 'has a definition' do
       expect(sanitizer).to respond_to :definition
@@ -36,69 +41,109 @@ module Hanitizer
     end
 
     describe '.sanitize' do
-      it 'applies the definition block to the row'
+      it 'applies the definition to the row' do
+        definition_applied = false
 
-      context 'with #first_name called in the definition' do
-        it 'generates a first name'
-        it 'updates the named field'
+        sanitizer.definition = lambda { |row|
+          definition_applied = true
+        }
+
+        expect {
+          sanitizer.sanitize(row)
+        }.to change { definition_applied }.from(false).to(true)
+
+        expect(definition_applied).to eq true
       end
 
-      context 'with #last_name called in the definition' do
-        it 'generates a last name'
-        it 'updates the named field'
+      shared_examples_for 'a basic generator' do |field,value|
+        raise ArgumentError, 'Block requires both field and value parameters' unless value
+
+        let(:definition) {
+          lambda { |row|
+            send(field, field)
+          }
+        }
+
+        let(:row) {
+          {
+            :first_name => 'Dynaguy',
+            field => value
+          }
+        }
+
+        let(:constant) { Generator.klass_for(field) }
+
+        let("row_with_#{field}".to_sym) { row }
+        let(:result) { sanitizer.sanitize(send "row_with_#{field}".to_sym) }
+
+        display_name = field.to_s.gsub('_', ' ')
+
+        it "creates a #{display_name} generator" do
+          expect(constant).to receive(:new).and_call_original
+          result
+        end
+
+        it 'sets the named field' do
+          expect(result[field]).to_not be_nil
+        end
+
+        it 'updates the named field' do
+          expect(result[field]).to_not eq value
+        end
       end
 
-      context 'with #address1 called in the definition' do
-        it 'generates an address1'
-        it 'updates the named field'
+      context 'with #first_name in the definition' do
+        it_behaves_like 'a basic generator', :first_name, 'Violet'
       end
 
-      context 'with #address2 called in the definition' do
-        it 'generates an address2'
-        it 'updates the named field'
+      context 'with #last_name in the definition' do
+        it_behaves_like 'a basic generator', :last_name, 'Parr'
       end
 
-      context 'with #city called in the definition' do
-        it 'generates an city'
-        it 'updates the named field'
+      context 'with #email in the definition' do
+        it_behaves_like 'a basic generator', :email, 'vparr@example.com'
       end
 
-      context 'with #state called in the definition' do
-        it 'generates an state'
-        it 'updates the named field'
+      context 'with #address1 in the definition' do
+        it_behaves_like 'a basic generator', :address1, '1 Way Street'
       end
 
-      context 'with #zip called in the definition' do
-        it 'generates an zip'
-        it 'updates the named field'
+      context 'with #address2 in the definition' do
+        it_behaves_like 'a basic generator', :address2, 'Apt 21'
       end
 
-      context 'with #country called in the definition' do
-        it 'generates an country'
-        it 'updates the named field'
+      context 'with #city in the definition' do
+        it_behaves_like 'a basic generator', :city, 'Nowhere'
       end
 
-      context 'with #nullify called in the definition' do
+      context 'with #state in the definition' do
+        it_behaves_like 'a basic generator', :state, 'DC'
+      end
+
+      context 'with #zip in the definition' do
+        it_behaves_like 'a basic generator', :zip, '00001'
+      end
+
+      context 'with #country in the definition' do
+        it_behaves_like 'a basic generator', :country, 'United States'
+      end
+
+      context 'with #nullify in the definition' do
         it 'updates the named field to nil'
       end
 
-      context 'with #email called in the definition' do
-        it 'generates an email'
-        it 'updates the named field'
-      end
-
-      context 'with #customize called in the definition' do
+      context 'with #customize in the definition' do
         it 'passes the row to the customize block'
         it 'updates the named field with the returned value'
       end
 
-      context 'with #marshal called in the definition' do
+      context 'with #marshal in the definition' do
         it 'passes the row to the marshal block'
         it 'marshals the returned value'
         it 'updates the named field with the marshaled value'
       end
 
-      context 'with #unmarshal called in the definition' do
+      context 'with #unmarshal in the definition' do
         it 'unmarshals the named field from the row'
         it 'passes the unmarshaled value to the block'
         it 'marshals the returned value'
