@@ -71,7 +71,7 @@ module Hanitizer
       end
 
       it 'applies all sanitizers' do
-        formula.sanitizers.each do |sanitizer|
+        formula.sanitizers.values do |sanitizer|
           expect(sanitizer).to receive(:sanitize).exactly(stubbed_entries.length).times
         end
 

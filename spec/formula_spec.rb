@@ -40,6 +40,28 @@ module Hanitizer
       end
     end
 
+    describe '#sanitize_targets' do
+      let(:targets) { %w(bomb_voyage syndrome) }
+
+      before do
+        targets.each do |target|
+          formula.truncate :omnidroid
+
+          formula.sanitize target do
+            customize :message do 'ANNNIIIHILAAAATE!'; end
+          end
+        end
+      end
+
+      it 'is enumerable' do
+        expect(formula.sanitize_targets).to respond_to :each
+      end
+
+      it 'includes collections named in calls to :sanitize' do
+        expect(formula.sanitize_targets).to eq targets
+      end
+    end
+
     describe '#sanitize' do
       let(:collection) { :hunters }
       let(:example_block) {

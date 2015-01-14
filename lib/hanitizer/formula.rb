@@ -17,6 +17,10 @@ module Hanitizer
       @sanitizers[name] << Sanitizer.new(&block)
     end
 
+    def sanitize_targets
+      @sanitizers.keys
+    end
+
     def truncate(name)
       name = name.to_s
       truncations << name unless truncations.include?(name)
