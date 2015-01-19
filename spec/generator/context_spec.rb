@@ -72,35 +72,6 @@ module Hanitizer
         expect(context.execute(&definition)).to equal row
       end
 
-      shared_examples_for 'a basic generator' do |field,value|
-        raise ArgumentError, 'Block requires both field and value parameters' unless value
-
-        let(:definition) {
-          lambda { |row|
-            send(field, field)
-          }
-        }
-
-        let(:row) {
-          {
-            :first_name => 'Dynaguy',
-            field => value
-          }
-        }
-
-        let(:constant) { Generator.klass_for(field) }
-
-        let("row_with_#{field}".to_sym) { row }
-        let(:result) { sanitizer.sanitize(send "row_with_#{field}".to_sym) }
-
-        display_name = field.to_s.gsub('_', ' ')
-
-        it "creates a #{display_name} generator" do
-          expect(constant).to receive(:new).and_call_original
-          result
-        end
-      end
-
       shared_examples_for 'creating the correct generator' do
         it 'creates the correct generator' do
           expect(klass).to receive(:new).and_call_original
