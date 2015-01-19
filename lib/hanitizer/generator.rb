@@ -32,20 +32,20 @@ module Hanitizer
         row
       end
 
-      def method_missing(name, *args)
+      def method_missing(name, *args, &block)
         if Generator.exists?(name)
-          apply_generator(name, *args)
+          klass = Generator.klass_for(name)
+          apply_generator(klass.new, *args, &block)
         else
           raise Hanitizer::MissingGeneratorError, "undefined generator #{name}"
         end
       end
 
-      def apply_generator(name, *args)
+      def apply_generator(generator, *args, &block)
         field = args.shift
-        klass = Generator.klass_for(name)
-        generator = klass.new
         arguments = [row] + Array(args)
-        row[field] = generator.generate(*arguments)
+
+        row[field] = generator.generate(*arguments, &block)
         true
       end
     end
@@ -63,3 +63,5 @@ require_relative 'generator/zip'
 require_relative 'generator/country'
 require_relative 'generator/nullify'
 require_relative 'generator/customize'
+require_relative 'generator/marshal'
+require_relative 'generator/unmarshal'
