@@ -285,6 +285,11 @@ module Hanitizer
               end
             }
           }
+          let(:row) {
+            h = {:first_name => 'Dynaguy' }
+            h[field] = Marshal.dump 'abc'
+            h
+          }
         end
       end
     end
