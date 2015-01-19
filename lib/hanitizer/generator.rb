@@ -43,7 +43,8 @@ module Hanitizer
 
       def apply_generator(generator, *args, &block)
         field = args.shift
-        arguments = [row] + Array(args)
+        arguments = [row]
+        arguments << row[field] if generator.method(:generate).arity > 1
 
         row[field] = generator.generate(*arguments, &block)
         true
