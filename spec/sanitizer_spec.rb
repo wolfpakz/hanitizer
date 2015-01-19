@@ -152,10 +152,6 @@ module Hanitizer
           expect(Generator::Nullify).to receive(:new).and_call_original
           result
         end
-
-        it 'nullifies the named field' do
-          expect(result[field]).to be_nil
-        end
       end
 
       context 'with #customize in the definition' do
