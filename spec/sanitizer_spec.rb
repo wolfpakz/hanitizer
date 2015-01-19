@@ -159,8 +159,6 @@ module Hanitizer
       end
 
       context 'with #customize in the definition' do
-        it 'passes the row to the customize block'
-        it 'updates the named field with the returned value'
       end
 
       context 'with #marshal in the definition' do
