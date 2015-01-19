@@ -1,4 +1,5 @@
 require 'inflector'
+require_relative 'errors'
 
 module Hanitizer
   module Generator
@@ -35,7 +36,7 @@ module Hanitizer
         if Generator.exists?(name)
           apply_generator(name, *args)
         else
-          raise MissingGeneratorError, "undefined generator #{name}"
+          raise Hanitizer::MissingGeneratorError, "undefined generator #{name}"
         end
       end
 
@@ -60,3 +61,4 @@ require_relative 'generator/city'
 require_relative 'generator/state'
 require_relative 'generator/zip'
 require_relative 'generator/country'
+require_relative 'generator/nullify'

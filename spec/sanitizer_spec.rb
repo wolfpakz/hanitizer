@@ -129,7 +129,33 @@ module Hanitizer
       end
 
       context 'with #nullify in the definition' do
-        it 'updates the named field to nil'
+        let(:field) { 'transaction_code' }
+        let(:value) { 'secret_code' }
+
+        let(:definition) {
+          field_name = field
+          lambda { |row|
+            nullify field_name
+          }
+        }
+
+        let(:row) {
+          {
+            :first_name => 'Dynaguy',
+            field => value
+          }
+        }
+
+        let(:result) { sanitizer.sanitize(row) }
+
+        it 'creates a nullify generator' do
+          expect(Generator::Nullify).to receive(:new).and_call_original
+          result
+        end
+
+        it 'nullifies the named field' do
+          expect(result[field]).to be_nil
+        end
       end
 
       context 'with #customize in the definition' do
