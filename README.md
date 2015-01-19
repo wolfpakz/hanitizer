@@ -91,15 +91,16 @@ Or install it yourself as:
         first_name :first_name
         last_name  :last_name
         
-        # Use first/last to customize email address
         customize :email do |row|
-          "#{row[:first_name][0]}#{row[:last_name]}@example.com"
+          first_initial = row[:first_name][0]
+          last_name = row[:last_name]
+          "#{first_initial}#{last_name}@example.com"
         end
 
         customize :routing_number {
-          (1..9).to_a.map { rand(9).to_s }.join # Generate 9 digit numbers
+          digits = 9.times.collect { rand(9).to_s }
+          digits.join
         }
-        
       end
     end
             
