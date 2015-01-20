@@ -1,12 +1,9 @@
-require 'hanitizer/formula'
-
 module Hanitizer
   class Cleaner
     attr_reader :formulas
 
-    def initialize(*formula_names)
-      @formulas = []
-      @formulas = formula_names.map { |name| Hanitizer.formulas[name] } unless formula_names.empty?
+    def initialize(*formulas)
+      @formulas = formulas
     end
 
     def clean(repository)

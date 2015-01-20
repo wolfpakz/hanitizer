@@ -19,7 +19,7 @@ module Hanitizer
     end
 
     let!(:cleaner) { Cleaner.new(*formula_list) }
-    let(:formula_list) { [:first, :second] }
+    let(:formula_list) { [formulas[:first], formulas[:second]] }
 
     describe '#sanitize_with' do
       it 'creates a cleaner with formula(s)' do

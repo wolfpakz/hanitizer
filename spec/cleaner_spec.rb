@@ -9,7 +9,7 @@ module Hanitizer
 
 
     describe '.new' do
-      let(:formula_list) { [:first] }
+      let(:formula_list) { [:first].map {|name| Formula.new(name) } }
 
       context 'with one formula name' do
         it 'adds to the list of formulas' do
@@ -18,7 +18,7 @@ module Hanitizer
       end
 
       context 'with multiple formula names' do
-        let(:formula_list) { [:first, :second, :third] }
+        let(:formula_list) { [:first, :second, :third].map {|name| Formula.new(name) } }
 
         it 'adds all names to the list of formulas' do
           expect(cleaner.formulas.length).to eq formula_list.length
@@ -28,7 +28,7 @@ module Hanitizer
 
 
     describe '#clean' do
-      let(:formula_list) { [:one, :two, :three] }
+      let(:formula_list) { [:one, :two, :three].map {|name| Formula.new(name) } }
 
       it 'applies all formulas' do
         expect(cleaner).to receive(:apply).exactly(formula_list.length).times
