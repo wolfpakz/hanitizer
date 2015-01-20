@@ -1,4 +1,3 @@
-require 'hanitizer'
 require 'hanitizer/formula'
 
 module Hanitizer

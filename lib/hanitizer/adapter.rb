@@ -1,3 +1,5 @@
+require_relative 'cleaner'
+
 module Hanitizer
   class Adapter
     def sanitize_with(*formulas)

@@ -1,5 +1,5 @@
 require 'rspec'
-require 'hanitizer/adapter'
+require 'hanitizer'
 require 'support/test_adapter'
 
 module Hanitizer
