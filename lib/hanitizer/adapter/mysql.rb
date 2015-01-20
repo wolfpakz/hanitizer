@@ -38,11 +38,11 @@ module Hanitizer
 
     private
     def escape(value)
-      return 'NULL' if value.nil?
-
       case value
         when Fixnum
           value
+        when nil
+          'NULL'
         else
           "'%s'" % client.escape(value.to_s)
       end
