@@ -14,12 +14,12 @@ module Hanitizer
     end
 
     def collection_entries(collection_name)
-      client.query('SELECT * FROM %s' % client.escape(collection_name))
+      client.query('SELECT * FROM %s' % escape(collection_name))
     end
 
     def truncate(*collection_names)
       collection_names = Array(collection_names)
-      escaped_names = collection_names.map { |name| client.escape name }
+      escaped_names = collection_names.map { |name| client.escape name.to_s }
 
       escaped_names.each do |name|
         client.query('TRUNCATE %s' % name)
@@ -32,12 +32,25 @@ module Hanitizer
       unless attributes.empty?
         mapped_attributes = attributes.map do |pair|
           key,value = pair
-          "%s = '%s'" % [key, client.escape(value)]
+          "%s = %s" % [key, escape(value)]
         end
 
         sql = 'UPDATE %s SET %s WHERE id = %d' % [client.escape(collection), mapped_attributes.join(', '), id]
         client.query(sql)
       end
     end
+
+    private
+    def escape(value)
+      return 'NULL' if value.nil?
+
+      case value
+        when Fixnum
+          value
+        else
+          "'%s'" % client.escape(value.to_s)
+      end
+    end
+
   end
 end
