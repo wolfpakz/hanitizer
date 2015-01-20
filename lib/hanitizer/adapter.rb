@@ -3,7 +3,15 @@ require_relative 'cleaner'
 module Hanitizer
   class Adapter
     def sanitize_with(*formula_names)
-      formulas = formula_names.map { |name| Hanitizer.formulas[name] } unless formula_names.empty?
+      formulas = if formula_names.empty?
+                   []
+                 else
+                   formula_names.map do |name|
+                     formula = Hanitizer.formulas[name]
+                     raise MissingFormulaError, name unless formula
+                     formula
+                   end
+                 end
       cleaner = Cleaner.new(*formulas)
       cleaner.clean(self)
     end

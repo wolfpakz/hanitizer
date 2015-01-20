@@ -34,6 +34,14 @@ module Hanitizer
 
         adapter.sanitize_with :first, :second
       end
+
+      context 'when a formula cannot be found' do
+        it 'raises a MissingFormulaError' do
+          expect {
+            adapter.sanitize_with :floo
+          }.to raise_error MissingFormulaError
+        end
+      end
     end
   end
 end
