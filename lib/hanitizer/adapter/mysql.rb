@@ -30,13 +30,9 @@ module Hanitizer
       attributes.delete('id') if attributes.key?('id')
 
       unless attributes.empty?
-        mapped_attributes = attributes.map do |pair|
-          key,value = pair
-          "%s = %s" % [key, escape(value)]
-        end
-
-        sql = 'UPDATE %s SET %s WHERE id = %d' % [client.escape(collection), mapped_attributes.join(', '), id]
-        client.query(sql)
+        table = client.escape(collection)
+        sql = 'UPDATE %s SET %s WHERE id = %d' % [table, attributes_to_sql(attributes), id]
+        client.query sql
       end
     end
 
@@ -52,5 +48,10 @@ module Hanitizer
       end
     end
 
+    def attributes_to_sql(attributes)
+      attributes.map do |key,value|
+        '%s = %s' % [key, escape(value)]
+      end.join(', ')
+    end
   end
 end
