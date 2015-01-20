@@ -14,7 +14,7 @@ module Hanitizer
     end
 
     def collection_entries(collection_name)
-      client.query('SELECT * FROM %s' % escape(collection_name))
+      client.query('SELECT * FROM %s' % collection_name)
     end
 
     def truncate(*collection_names)
