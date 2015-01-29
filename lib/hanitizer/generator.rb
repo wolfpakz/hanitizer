@@ -42,7 +42,7 @@ module Hanitizer
       end
 
       def apply_generator(generator, *args, &block)
-        field = args.shift
+        field = args.shift.to_sym
         arguments = [row]
         arguments << row[field] if generator.method(:generate).arity > 1
 

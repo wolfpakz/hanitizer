@@ -25,13 +25,17 @@ module Hanitizer
       before do
         context.apply_generator(generator, field)
       end
+      
+      it 'symbolizes the key' do
+        expect(row).to have_key(:street_address)
+      end
 
       it 'sets the named field' do
-        expect(row[field]).to_not be_nil
+        expect(row).to_not be_nil
       end
 
       it 'updates the named field' do
-        expect(row[field]).to eq value
+        expect(row).to have_value(value)
       end
     end
 
