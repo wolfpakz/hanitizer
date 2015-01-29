@@ -1,9 +1,7 @@
 # Hanitizer
 
-Production data ends up in our development environments for a variety of reasons. Developers handling production data introduces security and privacy issues. By sanitizing the data, we can reduce those risks.
-
 Write formulas for sanitizing your SQL database, using a simple DSL, that offers fake data generation, table truncation, and more.
- 
+
 ## Installation
 
 Add this line to your application's Gemfile:
