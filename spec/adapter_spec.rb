@@ -1,5 +1,6 @@
 require 'rspec'
 require 'hanitizer'
+require 'hanitizer/adapter'
 require 'support/test_adapter'
 
 module Hanitizer
@@ -41,6 +42,16 @@ module Hanitizer
             adapter.sanitize_with :floo
           }.to raise_error MissingFormulaError
         end
+      end
+    end
+    
+    describe '#symbolize_keys' do
+      let(:entry) {
+        { 'key' => 'value' }
+      }
+      
+      it 'symolizes string keys' do
+        expect(subject.symbolize_keys(entry)).to have_key(:key)
       end
     end
   end

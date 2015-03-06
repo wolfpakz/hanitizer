@@ -18,9 +18,18 @@ module Hanitizer
 
     def update_each(collection_name, &block)
       collection_entries(collection_name).each do |entry|
-        updated_entry = yield Hash.new.merge(entry)
-        update(collection_name, entry['id'], updated_entry) unless updated_entry.eql?(entry)
+        symbolized_key_entry = symbolize_keys(entry)
+        updated_entry = yield Hash.new.merge(symbolized_key_entry)
+        update(collection_name, symbolized_key_entry[:id], updated_entry) unless updated_entry.eql?(symbolized_key_entry)
       end
+    end
+    
+    def symbolize_keys(entries)
+      hash = {}
+      entries.map do |k, v|
+        hash[k.to_sym] = v
+      end
+      hash
     end
 
     def connect(url)

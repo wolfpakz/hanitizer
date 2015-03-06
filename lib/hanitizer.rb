@@ -2,6 +2,7 @@ require 'hanitizer/version'
 require 'hanitizer/errors'
 require 'hanitizer/adapter'
 require 'hanitizer/adapter/mysql'
+require 'hanitizer/adapter/pg'
 require 'hanitizer/formula'
 require 'uri'
 

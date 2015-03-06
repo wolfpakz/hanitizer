@@ -27,7 +27,7 @@ Or install it yourself as:
     
 ### Connect to a database
 
-    repository = Hanitizer.connect 'postgres://user:password@host/database_name/'
+    repository = Hanitizer.connect 'pg://user:password@host/database_name/'
 
 ### Run your formula(s)
 
