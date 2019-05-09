@@ -1,13 +1,13 @@
 require 'hanitizer/adapter'
-require 'hanitizer/adapter/sql_server'
+require 'hanitizer/adapter/sqlserver'
 require 'support/an_adapter'
 
 module Hanitizer
-  class Adapter::SqlServerTest < Adapter::SqlServer
+  class Adapter::SqlserverTest < Adapter::Sqlserver
   end
 
-  RSpec.describe Adapter::SqlServer do
-    subject(:adapter) { Adapter::SqlServerTest.new }
+  RSpec.describe Adapter::Sqlserver do
+    subject(:adapter) { Adapter::SqlserverTest.new }
     let(:host)     { 'localhost' }
     let(:database) { 'hanitizer_test' }
     let(:username) { 'user' }
@@ -32,7 +32,7 @@ module Hanitizer
     end
     
     it_behaves_like 'an adapter' do
-      let!(:adapter) { Adapter::SqlServerTest.new }
+      let!(:adapter) { Adapter::SqlserverTest.new }
       let(:collection_name) { database }
       let(:entries) { stubbed_entries }
     end

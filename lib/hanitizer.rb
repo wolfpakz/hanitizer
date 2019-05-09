@@ -3,6 +3,7 @@ require 'hanitizer/errors'
 require 'hanitizer/adapter'
 require 'hanitizer/adapter/mysql'
 require 'hanitizer/adapter/pg'
+require 'hanitizer/adapter/sqlserver'
 require 'hanitizer/formula'
 require 'uri'
 
