@@ -12,20 +12,17 @@ module Hanitizer
       end
     end
 
-    def sanitize_row(row, sanitizers)
-      sanitizers.reduce(row) do |working_row, sanitizer|
-        sanitizer.sanitize(working_row)
-      end
-    end
-
     def apply(formula, repository)
       formula.truncations.each do |name|
         repository.truncate name
       end
 
       formula.sanitize_targets.each do |collection|
-        sanitizers = formula.sanitizers[collection]
-        repository.update_each(collection) { |row| sanitize_row row, sanitizers }
+        sanitizer = formula.sanitizers[collection]
+
+        repository.update_each(collection, sanitizer.primary_key) do |row|
+          sanitizer.sanitize(row)
+        end
       end
     end
   end

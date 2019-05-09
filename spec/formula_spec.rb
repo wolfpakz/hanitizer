@@ -85,8 +85,8 @@ module Hanitizer
           example_block.call
         end
 
-        it 'does not add to #collections' do
-          expect(example_block).not_to change { formula.sanitizers.keys.size }
+        it 'raises an error' do
+          expect(example_block).to raise_error(ArgumentError, "Duplicate sanitizer for collection '#{collection}'")
         end
       end
     end

@@ -163,6 +163,21 @@ Or install it yourself as:
       end
     end
 
+### Specifying the primary key for a collection
+
+Hanitizer defaults to expecting a primary key field named "id". If you have a primary key you must specify it.
+
+
+For example:
+
+    Hanitizer.formula(:foo) do
+      sanitize :users, primary_key: :userId do
+        first_name :firstName
+        last_name :lastName
+      end
+    end
+
+_Note: Currently compound primary keys are not supported_ 
 
 ## Contributing
 
