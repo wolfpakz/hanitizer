@@ -21,7 +21,7 @@ module Hanitizer
         symbolized_key_entry = symbolize_keys(entry)
         updated_entry = yield Hash.new.merge(symbolized_key_entry)
 
-        update(collection_name, symbolized_key_entry[:id], updated_entry) unless updated_entry.eql?(symbolized_key_entry)
+        update(collection_name, primary_key, symbolized_key_entry[primary_key], updated_entry) unless updated_entry.eql?(symbolized_key_entry)
       end
     end
     

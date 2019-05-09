@@ -26,12 +26,12 @@ module Hanitizer
       end
     end
 
-    def update(collection, id, attributes)
+    def update(collection, primary_key, id, attributes)
       attributes.delete('id') if attributes.key?('id')
 
       unless attributes.empty?
         table = client.escape(collection)
-        sql = 'UPDATE %s SET %s WHERE id = %d' % [table, attributes_to_sql(attributes), id]
+        sql = 'UPDATE %s SET %s WHERE %s = %d' % [table, attributes_to_sql(attributes), primary_key, id]
         client.query sql
       end
     end

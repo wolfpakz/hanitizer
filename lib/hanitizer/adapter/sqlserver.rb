@@ -30,21 +30,19 @@ module Hanitizer
       escaped_names = collection_names.map { |name| client.escape name.to_s }
 
       escaped_names.each do |name|
-        client.execute('TRUNCATE TABLE %s' % name)
+        result = client.execute('TRUNCATE TABLE %s' % name)
+        result.do
       end
     end
 
-    def update(collection, id, attributes)
-      puts "===> Attributes: #{attributes.inspect}"
-      attributes.delete('id') if attributes.key?('id')
+    def update(collection, primary_key, id, attributes)
+      attributes.delete(primary_key) if attributes.key?(primary_key)
 
       unless attributes.empty?
         table = client.escape(collection)
-        puts "=== Table: #{table}"
-        puts "=== Attributes: #{attributes_to_sql(attributes)}"
-        puts "=== ID: #{id}"
-        sql = 'UPDATE %s SET %s WHERE id = %d' % [table, attributes_to_sql(attributes), id]
-        client.execute sql
+        sql = 'UPDATE %s SET %s WHERE %s = %d' % [table, attributes_to_sql(attributes), primary_key, id]
+        result = client.execute sql
+        result.do
       end
     end
 

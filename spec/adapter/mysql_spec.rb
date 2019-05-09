@@ -114,26 +114,23 @@ module Hanitizer
 
     describe '#update' do
       let(:collection_name) { 'the_incredibles' }
+      let(:primary_key) { :customPk }
       let(:id) { 1 }
       let(:first_name) { 'Fro' }
       let(:last_name) { 'Zone' }
       let(:attributes) { {:first_name => first_name, :last_name => last_name} }
-
-      let(:update_sql) {
-        'UPDATE %s SET %s = %s, %s = %s WHERE id = %d' % [collection_name, 'first_']
-      }
 
       before do
         allow(client).to receive_messages(:query => true)
       end
 
       it 'updates the identified entry' do
-        adapter.update collection_name, id, attributes
+        adapter.update collection_name, primary_key, id, attributes
 
         expect(client).to have_received(:query).with(/UPDATE #{collection_name} SET/)
         expect(client).to have_received(:query).with(/first_name = '#{first_name}'/)
         expect(client).to have_received(:query).with(/last_name = '#{last_name}'/)
-        expect(client).to have_received(:query).with(/WHERE id = #{id}/)
+        expect(client).to have_received(:query).with(/WHERE #{primary_key} = #{id}/)
       end
 
       context 'with an empty hash' do
@@ -141,7 +138,7 @@ module Hanitizer
 
         it 'does not update anything' do
           expect(client).not_to receive(:query)
-          adapter.update collection_name, id, attributes
+          adapter.update collection_name, primary_key, id, attributes
         end
       end
 
@@ -152,7 +149,7 @@ module Hanitizer
 
         it 'sets the field to NULL' do
           expect(client).to receive(:query).with(/last_name = NULL/)
-          adapter.update collection_name, id, attributes
+          adapter.update collection_name, primary_key, id, attributes
         end
       end
 
@@ -163,7 +160,7 @@ module Hanitizer
 
         it 'sets the field value correctly' do
           expect(client).to receive(:query).with(/age = 12/)
-          adapter.update collection_name, id, attributes
+          adapter.update collection_name, primary_key, id, attributes
         end
       end
     end
