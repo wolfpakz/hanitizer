@@ -10,12 +10,12 @@ module Hanitizer
   RSpec.describe Adapter::Pg do
     subject(:adapter) { Adapter::PgTest.new }
     let(:host)     { 'localhost' }
-    let(:database) { 'test' }
+    let(:database) { 'hanitizer_test' }
     let(:username) { 'user' }
     let(:password) { 'secret' }
-    let(:url)      { "pg://#{username}:#{password}@#{host}/test" }
+    let(:url)      { "pg://#{username}:#{password}@#{host}/#{database}" }
     
-    let!(:client) { ::PG::Connection.new }
+    let!(:client) { ::PG::Connection.new(host: host, dbname: database) }
     let(:result_double) {
       double('Pg::Result', each: stubbed_entries, count: stubbed_entries.size)
     }
@@ -30,7 +30,7 @@ module Hanitizer
     let(:collection_name) { 'test_collection' }
 
     before do
-      allow(::PG::Connection).to receive_messages(:new => client)
+      allow(::PG::Connection).to receive_messages(:open => client)
       allow(adapter).to receive_messages(:client => client)
     end
     
@@ -43,26 +43,26 @@ module Hanitizer
     describe '#connect' do
       it 'connects to the repository' do
         adapter.connect url
-        expect(::PG::Connection).to have_received(:new)
+        expect(::PG::Connection).to have_received(:open)
       end
 
       it 'connects to the correct host' do
-        expect(::PG::Connection).to receive(:new).with(hash_including :host => host)
+        expect(::PG::Connection).to receive(:open).with(hash_including :host => host)
         adapter.connect url
       end
 
       it 'connects using a username' do
-        expect(::PG::Connection).to receive(:new).with(hash_including :user => username)
+        expect(::PG::Connection).to receive(:open).with(hash_including :user => username)
         adapter.connect url
       end
 
       it 'connects using a password' do
-        expect(::PG::Connection).to receive(:new).with(hash_including :password => password)
+        expect(::PG::Connection).to receive(:open).with(hash_including :password => password)
         adapter.connect url
       end
 
       it 'connects to the correct database' do
-        expect(::PG::Connection).to receive(:new).with(hash_including :dbname => database)
+        expect(::PG::Connection).to receive(:open).with(hash_including :dbname => database)
         adapter.connect url
       end
 
