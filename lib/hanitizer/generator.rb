@@ -55,6 +55,7 @@ end
 
 require_relative 'generator/first_name'
 require_relative 'generator/last_name'
+require_relative 'generator/us_phone'
 require_relative 'generator/email'
 require_relative 'generator/address1'
 require_relative 'generator/address2'
