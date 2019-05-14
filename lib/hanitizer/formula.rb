@@ -11,10 +11,11 @@ module Hanitizer
       @truncations = []
     end
 
-    def sanitize(name, &block)
+    def sanitize(name, options={primary_key: :id}, &block)
       name = name.to_s
-      @sanitizers[name] ||= []
-      @sanitizers[name] << Sanitizer.new(&block)
+      raise ArgumentError, "Duplicate sanitizer for collection '#{name}'" if @sanitizers.has_key?(name)
+
+      @sanitizers[name] = Sanitizer.new(options, &block)
     end
 
     def sanitize_targets
