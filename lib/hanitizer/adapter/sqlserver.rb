@@ -3,7 +3,8 @@ require 'tiny_tds'
 
 module Hanitizer
   class Adapter::Sqlserver < Adapter
-    attr_reader :client
+    attr_reader :reader
+    attr_reader :writer
 
     def connect(connection_string)
       uri = URI.parse(connection_string)
@@ -11,11 +12,12 @@ module Hanitizer
       password = URI.decode(password) if password.include?('%')
       database = path.gsub('/', '')
 
-      @client = ::TinyTds::Client.new :host => host, :username => user, :database => database, :password => password
+      @reader = ::TinyTds::Client.new :host => host, :username => user, :database => database, :password => password
+      @writer = ::TinyTds::Client.new :host => host, :username => user, :database => database, :password => password
     end
 
     def collection_entries(collection_name)
-      result = client.execute('SELECT * FROM %s' % collection_name)
+      result = reader.execute('SELECT * FROM %s' % collection_name)
 
       # Support the :count method
       def result.count
@@ -27,10 +29,10 @@ module Hanitizer
 
     def truncate(*collection_names)
       collection_names = Array(collection_names)
-      escaped_names = collection_names.map { |name| client.escape name.to_s }
+      escaped_names = collection_names.map { |name| writer.escape name.to_s }
 
       escaped_names.each do |name|
-        result = client.execute('TRUNCATE TABLE %s' % name)
+        result = writer.execute('TRUNCATE TABLE %s' % name)
         result.do
       end
     end
@@ -39,9 +41,9 @@ module Hanitizer
       attributes.delete(primary_key) if attributes.key?(primary_key)
 
       unless attributes.empty?
-        table = client.escape(collection)
+        table = writer.escape(collection)
         sql = 'UPDATE %s SET %s WHERE %s = %d' % [table, attributes_to_sql(attributes), primary_key, id]
-        result = client.execute sql
+        result = writer.execute sql
         result.do
       end
     end
@@ -54,7 +56,7 @@ module Hanitizer
         when nil
           'NULL'
         else
-          "'%s'" % client.escape(value.to_s)
+          "'%s'" % reader.escape(value.to_s)
       end
     end
 
