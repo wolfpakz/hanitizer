@@ -10,7 +10,7 @@ module Hanitizer
       host, user, password, path = uri.host, uri.user, uri.password, uri.path
       database = path.gsub('/', '')
       
-      @client = ::PG::Connection.new :host => host, :user => user, :password => password, :dbname => database
+      @client = ::PG::Connection.open :host => host, :user => user, :password => password, :dbname => database
     end
     
     def collection_entries(collection_name)
