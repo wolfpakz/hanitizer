@@ -41,6 +41,10 @@ module Hanitizer
       case value
         when Fixnum
           value
+        when Time, DateTime
+          "'#{value.strftime('%Y-%m-%d %H:%M:%S')}'"
+        when Date
+          "'#{value.strftime('%Y-%m-%d')}'"
         when nil
           'NULL'
         else
